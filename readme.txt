@@ -1,4 +1,4 @@
-# Amplicon workflow with snakemake
+# __Amplicon workflow with snakemake__
 
 This workflow is for short amplicon with two aligners (BWA and Bowtie2) and at the end, counts bases
 - overall
