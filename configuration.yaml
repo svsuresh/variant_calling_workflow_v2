@@ -1,0 +1,13 @@
+# starting data
+source_dir: "test"
+
+# Reference file
+ref_fa: "reference/reference_trimmed.fa"
+
+# Threads per job for some mulithreaded jobs
+threads: 4
+
+# Illumina adaptors to be trimmed
+adaptor_5p: "CGTATAATGTATGCTATACGAAGTTATCTCGAGCCAC"
+adaptor_3p: "GGAGATCGTGATCCGGAGCGAGAACTTC"
+

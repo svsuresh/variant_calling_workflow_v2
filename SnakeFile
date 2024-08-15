@@ -1,0 +1,44 @@
+## Amplicon analysis
+import os
+import glob
+
+configfile: "configuration.yaml"
+
+include: "rules/bwa_index.smk"
+include: "rules/bowtie2_index.smk"
+include: "rules/deinterlacer.smk"
+include: "rules/cutadapt.smk"
+include: "rules/fastqc.smk"
+include: "rules/dedup.smk"
+include: "rules/bwa_align.smk"
+include: "rules/bowtie2_align.smk"
+include: "rules/bwa_align_index.smk"
+include: "rules/bowtie2_align_index.smk"
+include: "rules/bamstat.smk"
+include: "rules/bt2_variant_calling.smk"
+include: "rules/bwa_variant_calling.smk"
+include: "rules/counts.smk"
+include: "rules/combine_counts.smk"
+
+
+files,=glob_wildcards(config['source_dir'] + "/{sample}.fastq")
+aligners=["bwa","bt2"]
+
+rule all:
+    input:
+        # expand("{sample}/processed_reads/{sample}_{ext}.fastq", sample=files, ext=["R1","R2"]),
+        expand("{ref_fa}.amb", ref_fa=config["ref_fa"]),
+        expand("{ref_fa}.1.bt2", ref_fa=config["ref_fa"]),
+        expand("{sample}/processed_reads/{sample}_{ext}_fastqc.html", sample=files, ext=["R1","R2"]),
+        expand("{sample}/processed_reads/{sample}_{ext}_fastqc.zip", sample=files, ext=["R1","R2"]),
+        expand("{sample}/trimmed/{sample}_{ext}_fastqc.html", sample=files, ext=["R1","R2"]),
+        expand("{sample}/trimmed/{sample}_{ext}_fastqc.zip", sample=files, ext=["R1","R2"]),
+        # expand("{sample}/trimmed/{sample}_{ext}.fastq", sample=files, ext=["R1","R2"]),
+        # expand("{sample}/aligned/{sample}.{aligners}.sorted.bam", sample=files, aligners=aligners),
+        expand("{sample}/aligned/{sample}.{aligners}.sorted.bam.bai", sample=files, aligners=aligners),
+        # expand("{sample}/counts/{sample}_{aligners}_both_strands.wig",sample=files, aligners=aligners),
+        # expand("{sample}/counts/{sample}_{aligners}_no_strand.wig",sample=files, aligners=aligners),
+        # expand("{sample}/counts/{sample}_{aligners}_all.wig",sample=files, aligners=aligners),
+        expand("{sample}/variant_calling/{sample}.{aligners}.vcf", sample=files,aligners=aligners),
+        expand("{sample}/aligned/bamstats/{sample}.{aligner}.flagstats", sample=files,aligner=aligners),
+        expand("{sample}/counts/{sample}.xlsx", sample=files)
